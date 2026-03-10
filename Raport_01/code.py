@@ -10,12 +10,6 @@ table_products = tables['Products']
 table_orderdate = tables['Orderdate']
 table_customers = tables['Customers']
 
-# Displaying tables to have vision of what im doing:
-display(table_orders.head(10))
-display(table_categories.head(10))
-display(table_products.head(10))
-display(table_orderdate.head(10))
-display(table_customers.head(10))
 
 #Removing unneccesary columns in table_orderdate:
 
@@ -28,24 +22,24 @@ merged = table_orderdate_fixed.merge(table_products, on= 'ProductID').merge(tabl
 categ_gross = merged.loc[:,['Gross_profit','CategoryName']]
 categories_with_highest_gross = categ_gross.groupby('CategoryName').agg(Total_gp_per_category = ('Gross_profit','sum')).reset_index()
 sorted_categories = categories_with_highest_gross.sort_values(by='Total_gp_per_category',ascending = False)
-display(sorted_categories.head(10))
+
 
 #Setting flag for delayed orders:
 
 new_table_orders = table_orders.loc[:,['OrderID','RequiredDate','ShippedDate']]
 new_table_orders['Delay'] = new_table_orders['RequiredDate']<new_table_orders['ShippedDate']
-display(new_table_orders.head(10))
+
 
 #Companies with the highest frequency:
 
 grouped_orders = table_orders.groupby('CustomerID').agg(Amount_of_orders = ('OrderID','count')).reset_index()
 sorted_orders = grouped_orders.sort_values(by='Amount_of_orders', ascending = False)
-display(sorted_orders.head(10))
+
 
 #Average Order Value
 aov = table_orderdate_fixed['Gross_profit'].mean()
 Average_Order_Value = pd.DataFrame({'Name':['Average_Order_Value'],'Result':[round(aov,2)]})
-print(f' The average order value its : {round(aov,2)}')
+
 
 #Export tables to excel file
 path = r'C:\Users\48514\Desktop\North_results.xlsx'
